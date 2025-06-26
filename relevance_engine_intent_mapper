@@ -1,0 +1,123 @@
+# 🧭  Relevance-Engine Improvement Worksheet  
+*Turn one executive quote into **engine-level hypotheses** with signals, prompt tweaks, ranking logic, and UX hooks—all tied to Precision, TTSI, or Noise.*
+
+---
+
+## 0 ▸ Quick Primer (what “relevance” means in our system)
+
+| Layer                 | What We Change Here                                     |
+|-----------------------|---------------------------------------------------------|
+| **Signals / Metadata**| Flags the ranker can score on (`OWNER_TIER`, `deadline`)|
+| **Prompt / Logic**    | One sentence the LLM or rules engine reads              |
+| **Retrieval / Ranking**| Boost / filter / tier rules before results hit UI      |
+| **UX Hook**           | Where surfaced: Critical / Updates / Reference, badge   |
+
+**Golden Metrics** (pick ONE per hypothesis)  
+`Precision @ Top 5` `TTSI p95` `Decision-shelf click-rate` `Noise % (<10 hard cap)`
+
+> **Ship rule:** a flag stays on only if it **improves its chosen metric** for 7 live days AND Noise < 10 %.
+
+---
+
+## 1 ▸ Raw Executive Quote  
+> “{{ paste full quote }}”
+
+---
+
+## 2 ▸ Break Quote into Mini-Themes  
+| # | Relevance Theme (one line) | Metric to Move |
+|---|---------------------------|----------------|
+| 1 |                           |                |
+| 2 |                           |                |
+| 3 |                           |                |
+
+---
+
+## 3 ▸ Build a Hypothesis for **each** Theme  
+> Template – “If __________ then __________ . We will prove success via **<metric>**.”
+
+### 1️⃣ Hypothesis  
+…
+
+### 2️⃣ Hypothesis  
+…
+
+*(add more rows if needed)*
+
+---
+
+## 4 ▸ Engine Mapping (repeat per hypothesis)
+
+### Hypothesis # __  
+
+| Layer                       | Build Action (bullet form)                                              |
+|-----------------------------|-------------------------------------------------------------------------|
+| **Signals / Metadata**      | • new flag? field coverage target?                                      |
+| **Prompt / Logic**          | • one-line instruction (LLM) *or* rule expression                      |
+| **Retrieval / Ranking**     | • boost, tier, filter rule                                             |
+| **UX Hook**                 | • shelf / badge / tooltip                                              |
+| **Edge Safeguard**          | • clamp noise, auto-mute, overflow rule                                 |
+
+---
+
+## 5 ▸ Success Gate  
+
+| Metric (ONE)         | Baseline | Target | Window |
+|----------------------|----------|--------|--------|
+|                      |          |        | 7 days |
+
+Noise must remain **<10 %**; flag auto-rolls back if breached.
+
+---
+
+## 6 ▸ 14-Day Task List  (per hypothesis)  
+1. Signals / tagging — …  
+2. Backend / ranking — …  
+3. Prompt tweak — …  
+4. Front-end hook — …  
+5. Flag + A/B + dashboard — …
+
+*(Split tasks > 14 days or defer.)*
+
+---
+
+## 🟢 Fully-Worked Example — Two Engine Hypotheses
+
+> **Quote**  
+> “Surface anything waiting for my sign-off first, and keep overdue trainings visible until I finish them.”
+
+| # | Theme                | Metric |
+|---|----------------------|--------|
+| 1 | Decision urgency     | Decision-click-rate |
+| 2 | Training nudges      | Training completion |
+
+### Hypothesis 1  
+“If artefacts tagged `ALERT_LEVEL: CRITICAL` (approval verb + @mention + deadline < 48 h) are pinned atop their topic, Decision-click-rate will rise ≥ 10 pp.”
+
+**Mapping**  
+*Signals* `has_approval_keyword`, `@mentioned_exec`, `deadline_hours`  
+*Logic* tier rule CRITICAL first  
+*UX* red 🚨 badge in Critical shelf  
+*Safeguard* max 3 critical cards
+
+**Metric Gate** click-rate 42 % → **≥ 52 %**
+
+### Hypothesis 2  
+“If overdue trainings re-surface every Monday, completion rises 15 pp in 30 days.”
+
+*Signals* `training_due_flag`, `due_date`  
+*Logic* weekly cron adds `ALERT_LEVEL: TRAINING_DUE`  
+*UX* yellow 📚 badge in Updates shelf  
+*Metric* completion 60 % → **75 %**
+
+**14-Day Tasks (shared)**  
+1. Extract signals 2 d  
+2. Tag + tier rules 2 d  
+3. FE badges 3 d  
+4. Flags + A/B 1 d  
+5. Dashboard tiles 1 d  
+
+---
+
+**How to use**: copy this worksheet, fill sections 1-6.  
+You’ll get a, metric-backed spec—no extra context needed.
